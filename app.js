@@ -1,3 +1,4 @@
+const PORT = process.env.PORT || 3000;
 const fs = require('fs');
 const requests = require('requests');
 const http = require('http');
@@ -57,4 +58,6 @@ const server = http.createServer((req , res)=>{
         res.end('404');
     }
 });
-server.listen(8000, 'localhost', ()=>{"done"});
+server.listen(PORT, () => {
+    console.log(`Our app is running on port ${ PORT }`);
+});
