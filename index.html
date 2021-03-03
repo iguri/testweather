@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <title>Weather App</title>
+</head>
+<style>
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+    body{
+        height: 95vh;
+        width: 100vw;
+        display: flex;
+    }
+    .box{
+        width: 30%;
+        height: 95%;
+        margin: auto;
+        background-color: forestgreen;
+        position: relative;
+        overflow: hidden;
+    }
+    @media only screen and (max-width: 767px){
+        .box{
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .sun{
+        color: white;
+        font-size: 40px;
+        display: block;
+        margin: auto;
+        animation: sun 3s linear 0s infinite normal;
+    }
+    @keyframes sun {
+        0%{
+            transform: scale(1);
+        }
+        100%{
+            transform: scale(1.5);
+        }
+    }
+    h1{
+        font-size: 4rem;
+    }
+    p, h3{
+        color: #303030;
+    }
+    #wecon{
+        display: flex;
+        width: 10%;
+        height: 50%;
+        margin: auto;
+    }
+    .info{
+        height: 50%;
+        text-align: center;
+        z-index: 99;
+        position: absolute;
+        top: 60%;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .tempmin-max, .temp {
+        margin: 0px;
+        padding: 0px;
+    }
+    .loc, .date{
+        margin-bottom: 20px;
+    }
+    .wave-1,.wave-2,.wave-3{
+        width: 800px;
+        background-color: powderblue;
+        height: 750px;
+        position: absolute;
+        top: 50%;
+        border-radius: 50%;
+        z-index: 80;
+    }
+
+    .wave-1{
+        left: -70%;
+        animation: wave 4s linear -1s infinite reverse;
+        }
+    @keyframes wave {
+        from{transform: rotate(10deg);}
+         to{transform: rotate(360deg);}
+        }
+        .wave-2{
+        left: -50%;
+        opacity: 0.7;
+        animation: wave1 4s linear -1.5s infinite reverse;
+        }
+    @keyframes wave1 {
+        from{transform: rotate(10deg);}
+         to{transform: rotate(360deg);}
+        }
+        .wave-3{
+        left: -20%;
+        animation: wave2 4s linear -2s infinite reverse;
+        }
+    @keyframes wave2 {
+        from{transform: rotate(10deg);}
+         to{transform: rotate(360deg);}
+        }
+</style>
+<body>
+    <div class="box">
+        <div class="wave-1"></div>
+        <div class="wave-2"></div>
+        <div class="wave-3"></div>
+        <div class="input">
+            <form action="http://127.0.0.1:8000/login" method="GET" target="_blank">
+                <input type="text" name="my"/>
+                <input type="submit" value="open" />
+            </form>
+        </div>
+        
+
+        <div id="wecon"><i class="fas fa-sun sun"></i></div>
+
+        <div class="info">
+            <h2 class="loc"><i class="fas fa-street-view fa-2x" id="ltd" style="color: white;">{%temploc%}, {%tempcon%}</i></h2>
+            <p class="date">Wed|FEB 23|10:49 AM</p>
+            <h1 class="temp">{%tempval%}°C</h1>
+            <h3 class="tempmin-max">MIN {%tempmin%}°C|MAX {%tempmax%}°C</h3>
+        </div>
+    </div>
+    <script>
+            const curDate = document.querySelector('.date');
+            const wecon = document.querySelector('#wecon');
+            const weather = document.getElementById('weathercon');
+            const tempStatus = "{%status%}";
+            console.log(tempStatus);
+            const weekDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+            let now = new Date();
+            var day = now.getDay();
+            var month = months[now.getMonth()];
+            var date = now.getDate();
+            var hour =  now.getHours();
+            var min = now.getMinutes();
+            var perio = "AM";
+        
+            if (tempStatus == "Sunny"){
+                wecon.innerHTML = "<i class='fas fa-sun sun'></i>";
+            }else if (tempStatus == "Clouds"){
+                wecon.innerHTML = "<i class='fas fa-cloud sun'></i>";
+            }else if (tempStatus == "Rainy"){
+                wecon.innerHTML = "<i class='fas fa-rain sun'></i>";
+            }else if (tempStatus == "Clear sky"){
+                wecon.innerHTML = "<i class='fas fa-sun sun'></i>";
+            }else if (tempStatus == "Clear"){
+                if(hour < 7 || hour > 19){
+                    wecon.innerHTML = "<i class='fas fa-moon sun'></i>";
+                }else{
+                    wecon.innerHTML = "<i class='fas fa-sun sun'></i>";
+                }
+            }else{
+                wecon.innerHTML = "<i class='fas fa-cloud-rain sun'></i>";
+            }
+        
+            function nowdate () {      
+            if (hour > 12){
+                perio = "PM"
+            }
+            if (hour > 12){
+                hour = hour-12;
+            }
+            if (hour < 10){
+                hour == 0 + hour;
+            }
+            if (min < 10){
+                min == 0 + min;
+            }
+            curDate.innerHTML = `${weekDays[day]}|${month}|${hour}:${min}:${perio}`;
+        }
+        nowdate();
+    </script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="/__/firebase/8.2.9/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="/__/firebase/8.2.9/firebase-analytics.js"></script>
+
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
+</body>
+</html>
